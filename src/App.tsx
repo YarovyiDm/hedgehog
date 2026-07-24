@@ -258,13 +258,18 @@ function Chapter({ c, i }: { c: Ch; i: number }) {
 }
 
 export default function App() {
-  const [route, setRoute] = useState(() => location.hash.replace(/^#\/?/, ''))
+  // Маршрут — лише те, що починається з "#/". Усе інше («#керування») —
+  // це якір усередині сторінки, і чіпати маршрут не можна, інакше клік
+  // у змісті документації викидав назад на лендінг.
+  const [route, setRoute] = useState(() =>
+    location.hash.startsWith('#/') ? location.hash.slice(2) : '',
+  )
 
   useEffect(() => {
     const onHash = () => {
-      setRoute(location.hash.replace(/^#\/?/, ''))
-      // якщо це не якір усередині документації — піднімаємось угору
-      if (!location.hash || location.hash.startsWith('#/')) window.scrollTo(0, 0)
+      if (!location.hash.startsWith('#/')) return
+      setRoute(location.hash.slice(2))
+      window.scrollTo(0, 0)
     }
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)

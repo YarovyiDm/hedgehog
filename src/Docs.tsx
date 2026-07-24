@@ -103,7 +103,22 @@ export function Docs() {
 
           <nav>
             {heads.map(h => (
-              <a key={h.id} href={`#${h.id}`} className={active === h.id ? 'on' : ''}>
+              <a
+                key={h.id}
+                href={`#${h.id}`}
+                className={active === h.id ? 'on' : ''}
+                onClick={e => {
+                  // Гортаємо самі, хеш лишаємо як є — щоб не смикати маршрут.
+                  // Через scrollTop, а не scrollIntoView: другий мовчки нічого не
+                  // робить у неактивній вкладці. Плавність дає CSS scroll-behavior.
+                  e.preventDefault()
+                  const el = document.getElementById(h.id)
+                  if (!el) return
+                  const y = el.getBoundingClientRect().top + window.scrollY - 16
+                  ;(document.scrollingElement ?? document.documentElement).scrollTop = y
+                  setActive(h.id)
+                }}
+              >
                 {h.text}
               </a>
             ))}

@@ -208,11 +208,17 @@ export function ArtPond() {
       {/* жаба у стрибку */}
       <path d="M330 196 q18-34 44-8" stroke={C.moss} strokeWidth="2" fill="none" strokeDasharray="4 6" />
       <g><ellipse cx="374" cy="192" rx="13" ry="8" fill={C.frog} /><circle cx="370" cy="186" r="3.4" fill={C.frog} /><circle cx="378" cy="186" r="3.4" fill={C.frog} /></g>
-      {/* їжак пливе */}
+      {/* їжак пливе — з голками, бо без них це просто камінець */}
       <g>
-        <ellipse cx="176" cy="230" rx="30" ry="17" fill={C.spine} />
-        <ellipse cx="202" cy="234" rx="13" ry="10" fill={C.hog} />
-        <circle cx="211" cy="233" r="3" fill="#20160f" />
+        {Array.from({ length: 11 }, (_, i) => {
+          const x = 150 + i * 5.6
+          const h = 13 + Math.sin(i * 0.75) * 5
+          return <path key={i} d={`M${x} 228 L${x + 2.8} ${222 - h} L${x + 5.6} 228Z`} fill={C.spine} />
+        })}
+        <ellipse cx="176" cy="230" rx="30" ry="15" fill={C.spine} />
+        <ellipse cx="202" cy="233" rx="13" ry="10" fill={C.hog} />
+        <circle cx="212" cy="232" r="3" fill="#20160f" />
+        <circle cx="205" cy="228" r="2" fill="#20160f" />
         <ellipse cx="176" cy="244" rx="46" ry="8" fill="#bfe1f2" opacity=".35" />
       </g>
     </svg>
@@ -308,6 +314,48 @@ export function ArtNest() {
       </g>
       <text x="238" y="166" fill={C.cream} fontSize="20" fontFamily="Lora, serif" fontStyle="italic" opacity=".8">z</text>
       <text x="256" y="150" fill={C.cream} fontSize="15" fontFamily="Lora, serif" fontStyle="italic" opacity=".55">z</text>
+    </svg>
+  )
+}
+
+/* ---------- ніч: коли ліс належить тобі ---------- */
+export function ArtNight() {
+  const flies = [[70, 96], [128, 62], [196, 104], [268, 74], [318, 122], [104, 148], [242, 156], [352, 92]]
+  return (
+    <svg viewBox="0 0 400 300">
+      <circle cx="318" cy="58" r="30" fill="#f7f0dd" opacity=".14" />
+      <circle cx="318" cy="58" r="20" fill="#f7f0dd" />
+      {Array.from({ length: 26 }, (_, i) => (
+        <circle key={i} cx={14 + ((i * 61) % 380)} cy={12 + ((i * 37) % 150)} r={1 + (i % 3) * 0.6}
+          fill="#dfeef5" opacity={0.2 + (i % 4) * 0.16} />
+      ))}
+      {/* дерева силуетами */}
+      {[[40, 1], [96, .8], [300, .9], [366, .7]].map(([x, sc], i) => (
+        <g key={i} transform={`translate(${x} 250) scale(${sc})`} opacity=".55">
+          <rect x="-5" y="-46" width="10" height="46" fill="#132019" />
+          <path d="M-34 -40 L0 -122 L34 -40Z" fill="#16281f" />
+        </g>
+      ))}
+      <path d="M0 248 Q120 224 220 244 Q320 262 400 236 L400 300 L0 300Z" fill={C.ground} />
+      {/* світлячки */}
+      {flies.map(([x, y], i) => (
+        <g key={i}>
+          <circle cx={x} cy={y} r="8" fill="#c8ff8a" opacity=".12" />
+          <circle cx={x} cy={y} r="3" fill="#c8ff8a" opacity=".85" />
+        </g>
+      ))}
+      {/* їжачок дивиться вгору */}
+      <g transform="translate(186 236)">
+        {Array.from({ length: 11 }, (_, i) => {
+          const x = -34 + i * 6
+          const h = 15 + Math.sin(i * 0.8) * 6
+          return <path key={i} d={`M${x} -8 L${x + 3} ${-8 - h} L${x + 6} -8Z`} fill={C.spine} />
+        })}
+        <ellipse cx="0" cy="0" rx="38" ry="20" fill={C.spine} />
+        <ellipse cx="32" cy="-2" rx="15" ry="12" fill={C.hog} />
+        <circle cx="43" cy="-4" r="3.2" fill="#20160f" />
+        <circle cx="35" cy="-8" r="2.2" fill="#20160f" />
+      </g>
     </svg>
   )
 }
