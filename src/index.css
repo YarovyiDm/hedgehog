@@ -208,18 +208,6 @@ footer { padding: 42px 0 60px; text-align: center; color: #6b7f77; font-size: 13
 }
 .back:hover { color: var(--ember); }
 
-.docs-search {
-  display: flex; align-items: center; gap: 9px; margin-bottom: 16px;
-  border: 1px solid var(--line); background: var(--panel);
-  border-radius: 10px; padding: 10px 13px;
-}
-.docs-search svg { color: var(--dim); flex: none; }
-.docs-search input {
-  flex: 1; min-width: 0; background: none; border: none; outline: none;
-  color: var(--ink); font: 400 14.5px var(--sans);
-}
-.docs-search input::placeholder { color: #61756d; }
-
 .docs-nav nav a {
   display: block; padding: 7px 12px; margin-bottom: 2px; border-radius: 8px;
   color: var(--dim); text-decoration: none; font-size: 14px; line-height: 1.45;
@@ -285,7 +273,7 @@ footer { padding: 42px 0 60px; text-align: center; color: #6b7f77; font-size: 13
      під min-content найширшої таблиці й зʼявляється горизонтальний скрол */
   .docs-wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 24px 0 70px; }
   .docs-nav { position: static; max-height: none; }
-  .docs-nav nav { display: none; }     /* на вузькому лишаємо пошук і «назад» */
+  .docs-nav { max-height: 42vh; }      /* на вузькому зміст лишається, просто нижчий */
 }
 
 /* ============ герой: пара кнопок ============ */

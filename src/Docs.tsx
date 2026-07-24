@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowLeft, Search } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { marked } from 'marked'
 import raw from './content/IMPLEMENTED.md?raw'
 
@@ -9,6 +9,8 @@ import raw from './content/IMPLEMENTED.md?raw'
  */
 
 type Head = { id: string; text: string }
+
+const OFFSET = 140 // на якій висоті заголовок вважається «поточним»
 
 function slug(s: string) {
   return (
@@ -22,9 +24,8 @@ function slug(s: string) {
 
 export function Docs() {
   const boxRef = useRef<HTMLDivElement>(null)
-  const [heads, setHeads] = useState<Head[]>([])
+  const navRef = useRef<HTMLElement>(null)
   const [active, setActive] = useState('')
-  const [q, setQ] = useState('')
 
   // id проставляємо в САМОМУ HTML, а не по DOM: React перемальовує
   // dangerouslySetInnerHTML і затирає атрибути, дописані вручну.
@@ -45,78 +46,77 @@ export function Docs() {
     return { html: out, toc }
   }, [])
 
-  useEffect(() => setHeads(toc), [toc])
-
+  /**
+   * Скролспай на прокрутці. Свідомо без IntersectionObserver: він мовчки
+   * не спрацьовує в неактивній вкладці, і підсвітка «застрягала».
+   * Тут — простий пошук останнього заголовка, що вже проїхав повз OFFSET.
+   */
   useEffect(() => {
     const box = boxRef.current
     if (!box) return
+    const update = () => {
+      const hs = Array.from(box.querySelectorAll('h2'))
+      if (!hs.length) return
 
-    // підсвічування поточного розділу
-    const io = new IntersectionObserver(
-      entries => {
-        const vis = entries.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
-        if (vis[0]) setActive(vis[0].target.id)
-      },
-      { rootMargin: '-8% 0px -70% 0px' },
-    )
-    box.querySelectorAll('h2').forEach(h => io.observe(h))
-    return () => io.disconnect()
+      let current = hs[0].id
+      for (const h of hs) {
+        if (h.getBoundingClientRect().top <= OFFSET) current = h.id
+        else break
+      }
+      setActive(prev => (prev === current ? prev : current))
+    }
+
+    // Без rAF: браузер і так шле scroll не частіше разу на кадр, а rAF
+    // мовчки не виконується в неактивній вкладці — підсвітка застрягала.
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    update()
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
   }, [html])
 
-  // фільтр по розділах: ховаємо все між заголовками, що не збіглися
+  // Тримаємо активний пункт у полі зору: розділів багато, сайдбар має свій скрол
   useEffect(() => {
-    const box = boxRef.current
-    if (!box) return
-    const needle = q.trim().toLowerCase()
+    const nav = navRef.current
+    if (!nav || !active) return
+    const link = nav.querySelector<HTMLAnchorElement>(`a[data-id="${active}"]`)
+    if (!link) return
 
-    let show = true
-    let matched = ''
-    for (const el of Array.from(box.children) as HTMLElement[]) {
-      if (el.tagName === 'H2') {
-        matched = el.textContent?.toLowerCase() ?? ''
-        show = !needle || matched.includes(needle)
-        // якщо заголовок не збігся — перевіримо вміст розділу нижче
-        if (!show) {
-          let probe = el.nextElementSibling as HTMLElement | null
-          while (probe && probe.tagName !== 'H2') {
-            if ((probe.textContent ?? '').toLowerCase().includes(needle)) { show = true; break }
-            probe = probe.nextElementSibling as HTMLElement | null
-          }
-        }
-      }
-      el.style.display = show ? '' : 'none'
-    }
-  }, [q, html])
+    const navBox = nav.getBoundingClientRect()
+    const box = link.getBoundingClientRect()
+    if (box.top < navBox.top + 8) nav.scrollTop -= navBox.top + 8 - box.top
+    else if (box.bottom > navBox.bottom - 8) nav.scrollTop += box.bottom - (navBox.bottom - 8)
+  }, [active])
+
+  const goTo = (id: string) => {
+    const el = document.getElementById(id)
+    if (!el) return
+    // через scrollTop, а не scrollIntoView: другий нічого не робить у неактивній вкладці
+    const y = el.getBoundingClientRect().top + window.scrollY - 16
+    ;(document.scrollingElement ?? document.documentElement).scrollTop = y
+    setActive(id)
+  }
 
   return (
     <div className="docs">
       <div className="docs-wrap">
-        <aside className="docs-nav">
+        <aside className="docs-nav" ref={navRef}>
           <a className="back" href="#/">
             <ArrowLeft size={16} /> на головну
           </a>
 
-          <div className="docs-search">
-            <Search size={15} />
-            <input value={q} onChange={e => setQ(e.target.value)} placeholder="Пошук по довіднику…" />
-          </div>
-
           <nav>
-            {heads.map(h => (
+            {toc.map(h => (
               <a
                 key={h.id}
+                data-id={h.id}
                 href={`#${h.id}`}
                 className={active === h.id ? 'on' : ''}
                 onClick={e => {
-                  // Гортаємо самі, хеш лишаємо як є — щоб не смикати маршрут.
-                  // Через scrollTop, а не scrollIntoView: другий мовчки нічого не
-                  // робить у неактивній вкладці. Плавність дає CSS scroll-behavior.
-                  e.preventDefault()
-                  const el = document.getElementById(h.id)
-                  if (!el) return
-                  const y = el.getBoundingClientRect().top + window.scrollY - 16
-                  ;(document.scrollingElement ?? document.documentElement).scrollTop = y
-                  setActive(h.id)
+                  e.preventDefault() // хеш лишаємо як є, щоб не смикати маршрут
+                  goTo(h.id)
                 }}
               >
                 {h.text}

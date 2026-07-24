@@ -14,10 +14,8 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 type Item = { el: HTMLElement; show: () => void }
 
 const pending = new Set<Item>()
-let frame = 0
 
 function check() {
-  frame = 0
   for (const it of [...pending]) {
     const b = it.el.getBoundingClientRect()
     if (b.top < window.innerHeight * 0.92 && b.bottom > 0) {
@@ -27,8 +25,10 @@ function check() {
   }
 }
 
+// Без requestAnimationFrame: у неактивній вкладці він не виконується,
+// і блоки лишалися невидимими. Scroll браузер і так шле раз на кадр.
 function schedule() {
-  if (!frame) frame = requestAnimationFrame(check)
+  check()
 }
 
 if (typeof window !== 'undefined') {
