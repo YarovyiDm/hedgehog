@@ -168,3 +168,122 @@ footer { padding: 42px 0 60px; text-align: center; color: #6b7f77; font-size: 13
   .reveal, .reveal.armed { opacity: 1; transform: none; transition: none; }
   .ff, .star, .scroll-hint { animation: none; }
 }
+
+/* ============ кнопка «Документація» в героєві ============ */
+.cta {
+  display: inline-flex; align-items: center; gap: 11px;
+  margin-top: 40px; padding: 15px 30px;
+  border-radius: 999px; text-decoration: none;
+  background: linear-gradient(180deg, rgba(226,139,62,.22), rgba(226,139,62,.10));
+  border: 1px solid rgba(226,139,62,.5);
+  color: var(--cream); font-weight: 600; font-size: 16.5px;
+  transition: transform .25s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease;
+}
+.cta:hover {
+  transform: translateY(-2px);
+  border-color: var(--ember);
+  background: linear-gradient(180deg, rgba(226,139,62,.34), rgba(226,139,62,.16));
+  box-shadow: 0 14px 34px rgba(226,139,62,.18);
+}
+.cta svg { color: var(--ember); }
+.cta .cta-go { transition: transform .25s ease; }
+.cta:hover .cta-go { transform: translateX(4px); }
+
+/* ============ сторінка документації ============ */
+.docs { position: relative; z-index: 2; }
+.docs-wrap {
+  width: min(1340px, 94vw); margin: 0 auto;
+  display: grid; grid-template-columns: 292px minmax(0, 1fr); gap: 46px;
+  padding: 40px 0 100px;
+}
+
+.docs-nav { position: sticky; top: 28px; align-self: start; max-height: calc(100vh - 56px); overflow: auto; }
+.docs-nav::-webkit-scrollbar { width: 6px; }
+.docs-nav::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+
+.back {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px;
+  color: var(--dim); text-decoration: none; font-size: 14.5px;
+  transition: color .2s ease;
+}
+.back:hover { color: var(--ember); }
+
+.docs-search {
+  display: flex; align-items: center; gap: 9px; margin-bottom: 16px;
+  border: 1px solid var(--line); background: var(--panel);
+  border-radius: 10px; padding: 10px 13px;
+}
+.docs-search svg { color: var(--dim); flex: none; }
+.docs-search input {
+  flex: 1; min-width: 0; background: none; border: none; outline: none;
+  color: var(--ink); font: 400 14.5px var(--sans);
+}
+.docs-search input::placeholder { color: #61756d; }
+
+.docs-nav nav a {
+  display: block; padding: 7px 12px; margin-bottom: 2px; border-radius: 8px;
+  color: var(--dim); text-decoration: none; font-size: 14px; line-height: 1.45;
+  border-left: 2px solid transparent; transition: color .2s ease, background .2s ease;
+}
+.docs-nav nav a:hover { color: var(--cream); background: var(--panel); }
+.docs-nav nav a.on { color: var(--cream); background: var(--panel); border-left-color: var(--ember); }
+
+.docs-head { padding: 26px 0 34px; border-bottom: 1px solid var(--line); margin-bottom: 34px; }
+.docs-head h1 { font: 700 clamp(36px, 5vw, 58px)/1.1 var(--serif); color: var(--cream); margin: 14px 0 0; }
+.docs-head p { color: var(--dim); margin-top: 14px; font: italic 400 19px/1.6 var(--serif); max-width: 62ch; }
+
+/* ---- markdown ---- */
+.docs-body { min-width: 0; }
+.md { color: #c3d1c9; font-size: 16px; min-width: 0; }
+.md h1 { display: none; }                 /* заголовок уже є у шапці */
+.md h2 {
+  font: 700 clamp(25px, 3vw, 34px)/1.2 var(--serif); color: var(--cream);
+  margin: 52px 0 18px; padding-bottom: 12px; border-bottom: 1px solid var(--line);
+  scroll-margin-top: 24px;
+}
+.md h2:first-of-type { margin-top: 0; }
+.md h3 { font: 600 20px/1.35 var(--serif); color: var(--moss); margin: 30px 0 12px; }
+.md p { margin: 13px 0; }
+.md strong { color: var(--cream); font-weight: 600; }
+.md em { color: var(--dim); }
+.md a { color: var(--ember); }
+
+.md ul, .md ol { margin: 13px 0; padding-left: 24px; }
+.md li { margin: 7px 0; }
+.md li > ul { margin: 6px 0; }
+
+.md code {
+  background: #0b1210; color: #ffd9a0; padding: 2px 7px; border-radius: 6px;
+  font: 13.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  border: 1px solid #091010;
+}
+.md pre {
+  background: #0b1210; border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 18px; overflow-x: auto; margin: 16px 0;
+}
+.md pre code { background: none; border: none; padding: 0; }
+
+.md table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+.md thead th {
+  background: #1b2823; color: var(--cream); text-align: left; font-weight: 600;
+  padding: 11px 14px; border-bottom: 1px solid var(--line); white-space: nowrap;
+}
+.md td { padding: 10px 14px; border-bottom: 1px solid #1b2521; vertical-align: top; }
+.md tbody tr:last-child td { border-bottom: none; }
+.md tbody tr:hover { background: rgba(255,255,255,.03); }
+/* таблиці мають скролитись самі, а не розтягувати сторінку */
+.md table { display: block; overflow-x: auto; white-space: normal; }
+
+.md hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+.md blockquote {
+  margin: 16px 0; padding: 12px 18px; border-left: 2px solid var(--ember);
+  background: rgba(255,255,255,.03); border-radius: 0 10px 10px 0; color: var(--dim);
+}
+
+@media (max-width: 980px) {
+  /* саме minmax(0,1fr), а не 1fr: інакше колонка роздувається
+     під min-content найширшої таблиці й зʼявляється горизонтальний скрол */
+  .docs-wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 24px 0 70px; }
+  .docs-nav { position: static; max-height: none; }
+  .docs-nav nav { display: none; }     /* на вузькому лишаємо пошук і «назад» */
+}

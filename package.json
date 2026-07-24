@@ -7,10 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync-docs": "cp ~/Documents/Hedgehog-IMPLEMENTED.md src/content/IMPLEMENTED.md"
   },
   "dependencies": {
     "lucide-react": "^1.26.0",
+    "marked": "^18.0.7",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

@@ -1,6 +1,7 @@
+import { useEffect, useState } from 'react'
 import {
-  ArrowDown, Backpack, CloudFog, CloudRain, Compass, Eye, Flame, Footprints,
-  Gauge, Leaf, Moon as MoonIcon, Mountain, Save, Snowflake, Sparkles, Waves, Wind,
+  ArrowDown, ArrowRight, Backpack, BookOpen, CloudFog, CloudRain, Compass, Eye, Flame,
+  Footprints, Gauge, Leaf, Moon as MoonIcon, Mountain, Save, Snowflake, Sparkles, Waves, Wind,
 } from 'lucide-react'
 
 import { Ambient } from './components/Ambient'
@@ -9,6 +10,7 @@ import {
   ArtFox, ArtNest, ArtPond, ArtRoll, ArtSkills, ArtSpines, ArtWeather, ArtYear, Moon, Ridge,
 } from './components/Art'
 import type { ReactNode } from 'react'
+import { Docs } from './Docs'
 
 type Fact = { icon: ReactNode; t: string; d: string }
 type Stat = { n: string; unit?: string; c: string }
@@ -256,6 +258,20 @@ function Chapter({ c, i }: { c: Ch; i: number }) {
 }
 
 export default function App() {
+  const [route, setRoute] = useState(() => location.hash.replace(/^#\/?/, ''))
+
+  useEffect(() => {
+    const onHash = () => {
+      setRoute(location.hash.replace(/^#\/?/, ''))
+      // якщо це не якір усередині документації — піднімаємось угору
+      if (!location.hash || location.hash.startsWith('#/')) window.scrollTo(0, 0)
+    }
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
+  if (route === 'docs') return <Docs />
+
   return (
     <>
       <Ambient />
@@ -271,6 +287,12 @@ export default function App() {
               <span><Mountain size={16} /> без насильства</span>
               <span><Gauge size={16} /> без Game Over</span>
             </div>
+
+            <a className="cta" href="#/docs">
+              <BookOpen size={18} />
+              Документація
+              <ArrowRight size={17} className="cta-go" />
+            </a>
           </div>
           <div className="ridge"><Ridge /></div>
           <div className="scroll-hint">гортай <ArrowDown size={17} /></div>
