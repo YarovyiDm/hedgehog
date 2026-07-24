@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   ArrowDown, ArrowRight, Backpack, BookOpen, Bug, CloudFog, CloudRain, Eye, Flame,
   Footprints, Gauge, Heart, Leaf, Moon as MoonIcon, Mountain, Snowflake, Sparkles,
-  Sunrise, Waves, Wind,
+  Waves, Wind,
 } from 'lucide-react'
 
 import { Ambient } from './components/Ambient'
@@ -295,11 +295,6 @@ function Landing() {
             </div>
 
             <div className="hero-cta">
-              <a className="cta" href="#story">
-                <Sunrise size={18} />
-                Що це за гра
-                <ArrowRight size={17} className="cta-go" />
-              </a>
               <a className="cta ghost" href="#/docs">
                 <BookOpen size={17} />
                 Технічний довідник
