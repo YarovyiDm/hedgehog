@@ -271,10 +271,50 @@ footer { padding: 42px 0 60px; text-align: center; color: #6b7f77; font-size: 13
 @media (max-width: 980px) {
   /* саме minmax(0,1fr), а не 1fr: інакше колонка роздувається
      під min-content найширшої таблиці й зʼявляється горизонтальний скрол */
-  .docs-wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 24px 0 70px; }
-  .docs-nav { position: static; max-height: none; }
-  .docs-nav { max-height: 42vh; }      /* на вузькому зміст лишається, просто нижчий */
+  .docs-wrap { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 18px 0 0; }
+  .docs-nav { position: static; max-height: none; overflow: visible; }
+  .docs-nav nav { display: none; }     /* вертикальний список ховаємо */
+  .docs-rail { display: flex; }        /* натомість — карусель унизу */
+  .docs-body { padding-bottom: 86px; } /* щоб контент не ховався за каруселлю */
 }
+@media (max-width: 560px) { .md { font-size: 15px; } }
+
+/* ============ нижня карусель-навігація (мобільна) ============ */
+.docs-rail {
+  display: none;
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  align-items: stretch;
+  overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(14, 22, 19, .93);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+  padding: 0 6px; padding-bottom: env(safe-area-inset-bottom);
+}
+.docs-rail::-webkit-scrollbar { display: none; }
+.docs-rail button {
+  flex: 0 0 auto; scroll-snap-align: center;
+  background: none; border: none; cursor: pointer;
+  color: var(--dim); font: 600 14px var(--sans);
+  padding: 15px 15px; white-space: nowrap;
+  transition: color .2s ease;
+}
+.docs-rail button.on { color: var(--cream); }
+.rail-sep { flex: 0 0 auto; align-self: center; width: 1px; height: 20px; background: var(--line); }
+
+/* ============ кнопка «вгору» ============ */
+.to-top {
+  position: fixed; right: 26px; bottom: 26px; z-index: 45;
+  width: 50px; height: 50px; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  background: linear-gradient(180deg, rgba(226,139,62,.24), rgba(226,139,62,.12));
+  border: 1px solid rgba(226,139,62,.5); color: var(--ember);
+  opacity: 0; transform: translateY(14px) scale(.9); pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease, background .2s ease;
+}
+.to-top.show { opacity: 1; transform: none; pointer-events: auto; }
+.to-top:hover { background: linear-gradient(180deg, rgba(226,139,62,.36), rgba(226,139,62,.18)); }
+@media (max-width: 980px) { .to-top { bottom: 74px; right: 18px; } }
 
 /* ============ герой: пара кнопок ============ */
 .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
@@ -347,3 +387,7 @@ footer { padding: 42px 0 60px; text-align: center; color: #6b7f77; font-size: 13
   .hero-cta { flex-direction: column; align-items: center; }
   .cta { width: 100%; max-width: 320px; justify-content: center; }
 }
+
+/* Показ каруселі — В КІНЦІ файлу, щоб перебити базове display:none
+   (яке визначене нижче за перший медіазапис і інакше вигравало б за порядком). */
+@media (max-width: 980px) { .docs-rail { display: flex; } }

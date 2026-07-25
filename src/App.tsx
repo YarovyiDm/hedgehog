@@ -11,6 +11,7 @@ import {
   ArtFox, ArtNest, ArtNight, ArtPond, ArtRoll, ArtSkills, ArtSpines, ArtWeather, ArtYear, Moon, Ridge,
 } from './components/Art'
 import { Docs } from './Docs'
+import { ScrollTop } from './components/ScrollTop'
 import type { ReactNode } from 'react'
 
 type Fact = { icon: ReactNode; t: string; d: string }
@@ -410,5 +411,10 @@ export default function App() {
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
-  return route === 'docs' ? <Docs /> : <Landing />
+  return (
+    <>
+      {route === 'docs' ? <Docs /> : <Landing />}
+      <ScrollTop />
+    </>
+  )
 }

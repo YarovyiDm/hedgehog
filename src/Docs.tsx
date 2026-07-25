@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { marked } from 'marked'
 import raw from './content/IMPLEMENTED.md?raw'
@@ -25,6 +25,7 @@ function slug(s: string) {
 export function Docs() {
   const boxRef = useRef<HTMLDivElement>(null)
   const navRef = useRef<HTMLElement>(null)
+  const railRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState('')
 
   // id проставляємо в САМОМУ HTML, а не по DOM: React перемальовує
@@ -88,7 +89,17 @@ export function Docs() {
     const box = link.getBoundingClientRect()
     if (box.top < navBox.top + 8) nav.scrollTop -= navBox.top + 8 - box.top
     else if (box.bottom > navBox.bottom - 8) nav.scrollTop += box.bottom - (navBox.bottom - 8)
+
+    // карусель унизу: підводимо активний пункт до центру
+    const rail = railRef.current
+    const chip = rail?.querySelector<HTMLButtonElement>(`button[data-id="${active}"]`)
+    if (rail && chip) {
+      const target = chip.offsetLeft - rail.clientWidth / 2 + chip.clientWidth / 2
+      rail.scrollTo({ left: target, behavior: 'smooth' })
+    }
   }, [active])
+
+  const short = (t: string) => t.split(' — ')[0]
 
   const goTo = (id: string) => {
     const el = document.getElementById(id)
@@ -137,6 +148,22 @@ export function Docs() {
 
           <div className="md" ref={boxRef} dangerouslySetInnerHTML={{ __html: html }} />
         </main>
+      </div>
+
+      {/* мобільна карусель: гортаєш убік, вертикальні риски розділяють */}
+      <div className="docs-rail" ref={railRef}>
+        {toc.map((h, i) => (
+          <Fragment key={h.id}>
+            {i > 0 && <span className="rail-sep" aria-hidden />}
+            <button
+              data-id={h.id}
+              className={active === h.id ? 'on' : ''}
+              onClick={() => goTo(h.id)}
+            >
+              {short(h.text)}
+            </button>
+          </Fragment>
+        ))}
       </div>
     </div>
   )
