@@ -222,7 +222,10 @@ footer { padding: 42px 0 60px; text-align: center; color: #6b7f77; font-size: 13
 
 /* ---- markdown ---- */
 .docs-body { min-width: 0; }
-.md { color: #c3d1c9; font-size: 16px; min-width: 0; }
+.md { color: #c3d1c9; font-size: 16px; min-width: 0; overflow-wrap: break-word; }
+/* anywhere, а не break-word: лише він враховує переноси в MIN-CONTENT,
+   тож склеєні через "/" коди (Load/CanFit/DropAll…) не розпихають сторінку. */
+.md p, .md li, .md td, .md th { overflow-wrap: anywhere; }
 .md h1 { display: none; }                 /* заголовок уже є у шапці */
 .md h2 {
   font: 700 clamp(25px, 3vw, 34px)/1.2 var(--serif); color: var(--cream);
@@ -244,6 +247,7 @@ footer { padding: 42px 0 60px; text-align: center; color: #6b7f77; font-size: 13
   background: #0b1210; color: #ffd9a0; padding: 2px 7px; border-radius: 6px;
   font: 13.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
   border: 1px solid #091010;
+  overflow-wrap: anywhere;   /* довгий ідентифікатор переноситься всередині себе */
 }
 .md pre {
   background: #0b1210; border: 1px solid var(--line); border-radius: 12px;
