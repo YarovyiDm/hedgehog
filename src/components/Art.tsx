@@ -102,25 +102,29 @@ export function ArtSkills() {
       <path d={`M150 ${y} L214 ${y}`} stroke={C.ember} strokeWidth="2.5" strokeDasharray="7 6" />
       <path d={`M214 ${y} l-9 -6 l0 12 Z`} fill={C.ember} />
       {glyph}
-      <text x="330" y={y + 5} fill={C.mist} fontSize="15" fontFamily="Inter, sans-serif">{label}</text>
+      {/* прикріплено до правого краю (text-anchor end) — тож підпис ніколи не вилазить */}
+      <text x="392" y={y + 5} textAnchor="end" fill={C.mist} fontSize="13" fontFamily="Inter, sans-serif">{label}</text>
     </g>
   )
   return (
     <svg viewBox="0 0 400 300">
-      {row(66,
-        <g><rect x="86" y="58" width="52" height="9" rx="4" transform="rotate(-12 112 62)" fill="#6b452c" />
-           <rect x="86" y="70" width="52" height="9" rx="4" transform="rotate(9 112 74)" fill="#6b452c" /></g>,
-        <g><path d="M252 82 q10-30 24-14 q12-20 22 8 q6 20-23 20 q-27 0-23-14Z" fill={C.ember} /></g>,
-        'багаття')}
-      {row(150,
-        <g><ellipse cx="112" cy="146" rx="24" ry="15" fill="#d8604c" /><rect x="105" y="146" width="14" height="20" rx="5" fill="#efdcc0" /></g>,
-        <g><path d="M262 136 l8 18 l18 4 l-14 13 l4 19 l-16-10 l-16 10 l4-19 l-14-13 l18-4Z" fill={C.moss} /></g>,
-        'бадьорість')}
-      {row(234,
-        <g><circle cx="112" cy="230" r="13" fill="#b06fc4" /><rect x="109" y="238" width="6" height="22" fill={C.leaf2} /></g>,
-        <g><ellipse cx="272" cy="230" rx="26" ry="17" fill="none" stroke={C.mist} strokeWidth="3" strokeDasharray="6 7" />
-           <circle cx="272" cy="230" r="7" fill={C.mist} opacity=".5" /></g>,
-        'маскування')}
+      {/* трохи ліворуч, щоб композиція «інгредієнт → ефект → підпис» була по центру */}
+      <g transform="translate(-26 0)">
+        {row(66,
+          <g><rect x="86" y="58" width="52" height="9" rx="4" transform="rotate(-12 112 62)" fill="#6b452c" />
+             <rect x="86" y="70" width="52" height="9" rx="4" transform="rotate(9 112 74)" fill="#6b452c" /></g>,
+          <g><path d="M252 82 q10-30 24-14 q12-20 22 8 q6 20-23 20 q-27 0-23-14Z" fill={C.ember} /></g>,
+          'багаття')}
+        {row(150,
+          <g><ellipse cx="112" cy="146" rx="24" ry="15" fill="#d8604c" /><rect x="105" y="146" width="14" height="20" rx="5" fill="#efdcc0" /></g>,
+          <g><path d="M262 136 l8 18 l18 4 l-14 13 l4 19 l-16-10 l-16 10 l4-19 l-14-13 l18-4Z" fill={C.moss} /></g>,
+          'бадьорість')}
+        {row(234,
+          <g><circle cx="112" cy="230" r="13" fill="#b06fc4" /><rect x="109" y="238" width="6" height="22" fill={C.leaf2} /></g>,
+          <g><ellipse cx="272" cy="230" rx="26" ry="17" fill="none" stroke={C.mist} strokeWidth="3" strokeDasharray="6 7" />
+             <circle cx="272" cy="230" r="7" fill={C.mist} opacity=".5" /></g>,
+          'маскування')}
+      </g>
     </svg>
   )
 }
