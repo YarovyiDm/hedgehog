@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import {
-  ArrowDown, ArrowRight, Backpack, BookOpen, Bug, CloudFog, CloudRain, Eye, Flame,
+  ArrowDown, ArrowRight, Backpack, BookOpen, CloudFog, CloudRain, Eye, Flame,
   Footprints, Gauge, Heart, Leaf, Moon as MoonIcon, Mountain, Snowflake, Sparkles,
-  Waves, Wind,
+  Squirrel, Waves, Wind, Worm,
 } from 'lucide-react'
 
 import { Ambient } from './components/Ambient'
 import { Reveal } from './components/Reveal'
 import {
-  ArtFox, ArtNest, ArtNight, ArtPond, ArtRoll, ArtSkills, ArtSpines, ArtWeather, ArtYear, Moon, Ridge,
+  ArtCritters, ArtFox, ArtNest, ArtNight, ArtPond, ArtRoll, ArtSkills, ArtSpines, ArtWeather, ArtYear, Moon, Ridge,
 } from './components/Art'
 import { Docs } from './Docs'
 import { ScrollTop } from './components/ScrollTop'
@@ -151,6 +151,29 @@ const chapters: Ch[] = [
   },
   {
     n: '07',
+    title: 'Ліс живе своїм життям',
+    lead: 'Білки при деревах, черв’яки в траві — світ не порожній.',
+    body: (
+      <>
+        <p>
+          Поки ти збираєш на зиму, ліс не стоїть декорацією. У кожного своя справа:
+          <b> білка</b> порається біля свого дерева, <b>черв’ячок</b> ліниво повзе травою,
+          <b> жучок</b> снує у власних клопотах.
+        </p>
+        <p>
+          Підійдеш ближче — білка кине все й <b>чкурне вгору стовбуром</b>, а черв’як
+          сховається під землю. Не ловець і не здобич — просто сусіди, з якими ліс живий.
+        </p>
+      </>
+    ),
+    facts: [
+      { icon: <Squirrel size={19} />, t: 'Білки при деревах', d: 'Гуляють своєю галявинкою, а злякавшись — миттю на стовбур' },
+      { icon: <Worm size={19} />, t: 'Дрібне життя внизу', d: 'Черв’ячки й жучки в траві — зникають, щойно підходиш' },
+    ],
+    art: <ArtCritters />,
+  },
+  {
+    n: '08',
     title: 'Погода змінює правила',
     lead: 'Туман засліплює обох.',
     body: (
@@ -171,7 +194,7 @@ const chapters: Ch[] = [
     art: <ArtWeather />,
   },
   {
-    n: '08',
+    n: '09',
     title: 'Рік, що справді минає',
     lead: 'Ночі коротшають до літа й довшають до зими.',
     body: (
@@ -190,7 +213,7 @@ const chapters: Ch[] = [
     art: <ArtYear />,
   },
   {
-    n: '09',
+    n: '10',
     title: 'Уся зима залежить від тебе',
     lead: 'Тут не можна програти. Можна лише зустріти зиму по-різному.',
     body: (
@@ -218,7 +241,7 @@ const pillars = [
 
 const moments = [
   { icon: <CloudRain size={18} />, t: 'Дощ стукає по голках' },
-  { icon: <Bug size={18} />, t: 'Метелик сідає на ніс' },
+  { icon: <Squirrel size={18} />, t: 'Білка зиркає зі стовбура' },
   { icon: <Sparkles size={18} />, t: 'Світлячки над ставком' },
   { icon: <Leaf size={18} />, t: 'Стрибок у купу листя' },
   { icon: <Waves size={18} />, t: 'Жаби порскають з-під лап' },

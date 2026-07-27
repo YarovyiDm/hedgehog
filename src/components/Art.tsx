@@ -21,6 +21,11 @@ const C = {
   moss: '#86b96b',
   frog: '#5e9a4a',
   mist: '#a9c0bb',
+  squirrel: '#a0632f',
+  squirrelTail: '#bd8049',
+  squirrelBelly: '#e0bd93',
+  worm: '#d98a8a',
+  beetle: '#2a241c',
 }
 
 /* ---------- гряда під героєм ---------- */
@@ -360,6 +365,88 @@ export function ArtNight() {
         <circle cx="43" cy="-4" r="3.2" fill="#20160f" />
         <circle cx="35" cy="-8" r="2.2" fill="#20160f" />
       </g>
+    </svg>
+  )
+}
+
+/* ---------- живий ліс: білки, черв'яки, жучки ---------- */
+export function ArtCritters() {
+  return (
+    <svg viewBox="0 0 400 300">
+      {/* земля */}
+      <path d="M0 236 Q120 214 240 228 Q330 238 400 218 L400 300 L0 300Z" fill={C.ground} />
+      <path d="M0 250 Q140 232 280 244 Q350 250 400 236 L400 300 L0 300Z" fill={C.ground2} opacity=".5" />
+
+      {/* «своя територія» — м'яке коло навколо дерева */}
+      <ellipse cx="300" cy="248" rx="98" ry="22" fill="none" stroke={C.cream} strokeWidth="1.6" strokeDasharray="6 8" opacity=".3" />
+
+      {/* дерево */}
+      <ellipse cx="324" cy="244" rx="46" ry="10" fill="#0b120f" opacity=".4" />
+      <path d="M262 172 L324 56 L386 172Z" fill={C.leaf2} />
+      <path d="M276 200 L324 96 L372 200Z" fill={C.leaf} />
+      <rect x="316" y="150" width="16" height="92" rx="4" fill={C.trunk} />
+      <ellipse cx="323" cy="226" rx="3" ry="4" fill="#5d3a22" opacity=".8" />
+
+      {/* білка чкурить угору стовбуром (голова догори) + сліди руху */}
+      <path d="M308 188 q16 -8 30 0" stroke={C.cream} strokeWidth="1.6" fill="none" opacity=".4" strokeDasharray="4 5" />
+      <path d="M312 178 q12 -6 22 0" stroke={C.cream} strokeWidth="1.4" fill="none" opacity=".28" strokeDasharray="3 5" />
+      <g>
+        <path d="M318 210 C 300 220, 302 246, 320 240 C 310 240, 312 220, 326 216 Z" fill={C.squirrelTail} />
+        <ellipse cx="324" cy="216" rx="8.5" ry="14" fill={C.squirrel} />
+        <ellipse cx="322" cy="217" rx="4.5" ry="10" fill={C.squirrelBelly} opacity=".8" />
+        <circle cx="323" cy="199" r="7" fill={C.squirrel} />
+        <path d="M318 195 l1 -6 l4 4 Z" fill={C.squirrel} />
+        <path d="M328 195 l-1 -6 l-4 4 Z" fill={C.squirrel} />
+        <circle cx="320" cy="199" r="1.6" fill="#20160f" />
+      </g>
+
+      {/* білка сидить біля дерева з горішком (дивиться на стовбур) */}
+      <g>
+        <path d="M234 238 C 210 238, 206 200, 230 194 C 216 202, 220 224, 238 230 Z" fill={C.squirrelTail} />
+        <ellipse cx="240" cy="226" rx="12" ry="16" fill={C.squirrel} />
+        <ellipse cx="244" cy="230" rx="7" ry="11" fill={C.squirrelBelly} opacity=".85" />
+        <circle cx="250" cy="208" r="8.5" fill={C.squirrel} />
+        <path d="M245 202 l1 -8 l5 5 Z" fill={C.squirrel} />
+        <path d="M254 201 l1 -7 l4 5 Z" fill={C.squirrel} />
+        <circle cx="253" cy="208" r="1.9" fill="#20160f" />
+        <circle cx="259" cy="211" r="1.3" fill="#20160f" />
+        <ellipse cx="249" cy="224" rx="4" ry="3" fill={C.squirrel} />
+        <circle cx="253" cy="224" r="3.2" fill="#8a5a2b" />
+        <path d="M249 222 q4 -3 8 0Z" fill="#5d3a22" />
+        <ellipse cx="240" cy="242" rx="8" ry="3.2" fill={C.squirrel} />
+      </g>
+
+      {/* черв'ячок повзе травою */}
+      <g>
+        {[[72, 240, 4.2], [82, 236, 4.8], [93, 235, 5.1], [104, 237, 4.8], [114, 234, 4], [122, 231, 3.2]].map(([x, y, r], i) => (
+          <circle key={i} cx={x} cy={y} r={r} fill={C.worm} />
+        ))}
+        <circle cx="123" cy="230" r="1.1" fill="#5a2f2f" />
+      </g>
+
+      {/* жучок поряд */}
+      <g>
+        <ellipse cx="158" cy="244" rx="9" ry="6" fill={C.beetle} />
+        <line x1="158" y1="239" x2="158" y2="249" stroke="#4a4030" strokeWidth="1" />
+        <circle cx="167" cy="244" r="3.2" fill="#3a3226" />
+        {[-6, 0, 6].map((dx, i) => (
+          <g key={i} stroke={C.beetle} strokeWidth="1.4" strokeLinecap="round">
+            <line x1={158 + dx} y1="248" x2={153 + dx} y2="252" />
+            <line x1={158 + dx} y1="240" x2={153 + dx} y2="237" />
+          </g>
+        ))}
+      </g>
+
+      {/* пучки трави спереду */}
+      {[[44, 252], [188, 250], [352, 246]].map(([x, y], i) => (
+        <g key={i} stroke={C.leaf} strokeWidth="2.4" strokeLinecap="round">
+          <line x1={x} y1={y} x2={x - 4} y2={y - 12} />
+          <line x1={x} y1={y} x2={x} y2={y - 15} />
+          <line x1={x} y1={y} x2={x + 4} y2={y - 12} />
+        </g>
+      ))}
+
+      <text x="300" y="276" textAnchor="middle" fill={C.mist} fontSize="12.5" fontFamily="Inter, sans-serif" opacity=".7">своя територія</text>
     </svg>
   )
 }
