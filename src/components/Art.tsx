@@ -1,7 +1,55 @@
 /**
- * Пласкі low-poly ілюстрації в стилі самої гри (Kenney Nature Kit):
- * прості трикутники й кола, тепла лісова палітра, жодних градієнтів-«вау».
+ * Ілюстрації сайту: м'які силуети нічного лісу (SVG) + справжні мальовані спрайти й рендери з гри
+ * (предмети, квіти, латаття, жаби, лісова сцена — з атласів Meshy й моделей Blender, `src/assets/art`).
  */
+import porcini from '../assets/art/porcini.png'
+import apple from '../assets/art/apple.png'
+import strawberry from '../assets/art/strawberry.png'
+import hazelnut from '../assets/art/hazelnut.png'
+import chanterelle from '../assets/art/chanterelle.png'
+import twig from '../assets/art/twig.png'
+import moss from '../assets/art/moss.png'
+import blackberry from '../assets/art/blackberry.png'
+import rosehip from '../assets/art/rosehip.png'
+import bluebell from '../assets/art/bluebell.png'
+import daisy from '../assets/art/daisy.png'
+import acorn from '../assets/art/acorn.png'
+import oakleaf from '../assets/art/oakleaf.png'
+import lilypad from '../assets/art/lilypad.png'
+import lilywhite from '../assets/art/lilywhite.png'
+import grass1 from '../assets/art/grass1.png'
+import grass2 from '../assets/art/grass2.png'
+import grass3 from '../assets/art/grass3.png'
+import fern from '../assets/art/fern.png'
+import frog1 from '../assets/art/frog1.png'
+import frog2 from '../assets/art/frog2.png'
+import forest from '../assets/art/forest.png'
+
+/** Мальований спрайт: (x, y) — центр низу, h — висота. */
+function Sprite({ href, x, y, h, w, rot = 0, o = 1, white = false }: { href: string; x: number; y: number; h: number; w?: number; rot?: number; o?: number; white?: boolean }) {
+  const ww = w ?? h
+  return (
+    <image href={href} x={x - ww / 2} y={y - h} width={ww} height={h} opacity={o}
+      transform={rot ? `rotate(${rot} ${x} ${y - h / 2})` : undefined}
+      filter={white ? 'url(#toWhite)' : undefined} preserveAspectRatio="xMidYMax meet" />
+  )
+}
+
+/** Фільтр «силует білим» (іконки запаху). Вставляється в кожен SVG, де потрібен. */
+function WhiteDefs() {
+  return (
+    <defs>
+      <filter id="toWhite" colorInterpolationFilters="sRGB">
+        <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 .97  0 0 0 1 0" />
+      </filter>
+    </defs>
+  )
+}
+
+/** Кущик мальованої трави. */
+function Tuft({ x, y, h = 30, k = 0 }: { x: number; y: number; h?: number; k?: number }) {
+  return <Sprite href={[grass1, grass2, grass3][k % 3]} x={x} y={y} h={h} w={h * 1.25} />
+}
 
 const C = {
   dark: '#0f1a16',
@@ -75,23 +123,28 @@ export function ArtSpines() {
       {Array.from({ length: 13 }, (_, i) => {
         const x = 116 + i * 13
         const h = 20 + Math.sin(i * 0.9) * 7
-        return <path key={i} d={`M${x} 170 L${x + 6} ${152 - h} L${x + 12} 170Z`} fill={C.spine} />
+        return (
+          <g key={i}>
+            <path d={`M${x} 172 L${x + 6} ${152 - h} L${x + 12} 172Z`} fill="#4a3a2c" />
+            <path d={`M${x + 4} ${160 - h * .55} L${x + 6} ${152 - h} L${x + 8} ${160 - h * .55}Z`} fill="#e9dcc3" />
+          </g>
+        )
       })}
-      {/* вантаж: яблуко(3) · гриб(2) · ягода(1) */}
-      <g>
-        <circle cx="150" cy="124" r="27" fill="#c4392a" />
-        <path d="M150 100 q6-12 15-14" stroke="#5d3a22" strokeWidth="4" fill="none" />
-        <text x="150" y="132" textAnchor="middle" fill={C.cream} fontSize="20" fontWeight="700" fontFamily="Lora, serif">3</text>
-      </g>
-      <g>
-        <ellipse cx="223" cy="132" rx="21" ry="14" fill="#d8604c" />
-        <rect x="217" y="132" width="12" height="18" rx="4" fill="#efdcc0" />
-        <text x="223" y="128" textAnchor="middle" fill={C.cream} fontSize="15" fontWeight="700" fontFamily="Lora, serif">2</text>
-      </g>
-      <g>
-        <circle cx="278" cy="140" r="14" fill="#a3243c" />
-        <text x="278" y="146" textAnchor="middle" fill={C.cream} fontSize="13" fontWeight="700" fontFamily="Lora, serif">1</text>
-      </g>
+      {Array.from({ length: 11 }, (_, i) => {
+        const x = 124 + i * 14
+        return <path key={'b' + i} d={`M${x} 196 L${x + 7} ${172 - (i % 3) * 4} L${x + 14} 196Z`} fill="#5a4636" stroke="#2a2018" strokeWidth=".8" />
+      })}
+      {/* вантаж, наколотий на голки: яблуко(3) · боровик(2) · горіх(1) · суниці(1) */}
+      <Sprite href={apple} x={150} y={178} h={74} rot={-8} />
+      <Sprite href={porcini} x={214} y={168} h={72} rot={4} />
+      <Sprite href={hazelnut} x={262} y={176} h={44} rot={10} />
+      <Sprite href={strawberry} x={184} y={150} h={44} rot={-14} />
+      {[[150, 96, '3'], [218, 88, '2'], [266, 124, '1']].map(([x, y, n]) => (
+        <g key={n + String(x)}>
+          <circle cx={x as number} cy={y as number} r="10" fill="#0f1a16" opacity=".75" />
+          <text x={x as number} y={(y as number) + 4.5} textAnchor="middle" fill={C.cream} fontSize="12" fontWeight="700" fontFamily="Lora, serif">{n}</text>
+        </g>
+      ))}
       {/* лапки */}
       <rect x="150" y="248" width="20" height="10" rx="5" fill={C.spine} />
       <rect x="238" y="248" width="20" height="10" rx="5" fill={C.spine} />
@@ -116,16 +169,15 @@ export function ArtSkills() {
       {/* трохи ліворуч, щоб композиція «інгредієнт → ефект → підпис» була по центру */}
       <g transform="translate(-26 0)">
         {row(66,
-          <g><rect x="86" y="58" width="52" height="9" rx="4" transform="rotate(-12 112 62)" fill="#6b452c" />
-             <rect x="86" y="70" width="52" height="9" rx="4" transform="rotate(9 112 74)" fill="#6b452c" /></g>,
+          <g><Sprite href={twig} x={112} y={92} h={44} w={60} /></g>,
           <g><path d="M252 82 q10-30 24-14 q12-20 22 8 q6 20-23 20 q-27 0-23-14Z" fill={C.ember} /></g>,
           'багаття')}
         {row(150,
-          <g><ellipse cx="112" cy="146" rx="24" ry="15" fill="#d8604c" /><rect x="105" y="146" width="14" height="20" rx="5" fill="#efdcc0" /></g>,
+          <g><Sprite href={porcini} x={112} y={176} h={52} /></g>,
           <g><path d="M262 136 l8 18 l18 4 l-14 13 l4 19 l-16-10 l-16 10 l4-19 l-14-13 l18-4Z" fill={C.moss} /></g>,
           'бадьорість')}
         {row(234,
-          <g><circle cx="112" cy="230" r="13" fill="#b06fc4" /><rect x="109" y="238" width="6" height="22" fill={C.leaf2} /></g>,
+          <g><Sprite href={bluebell} x={112} y={262} h={54} w={60} /></g>,
           <g><ellipse cx="272" cy="230" rx="26" ry="17" fill="none" stroke={C.mist} strokeWidth="3" strokeDasharray="6 7" />
              <circle cx="272" cy="230" r="7" fill={C.mist} opacity=".5" /></g>,
           'маскування')}
@@ -204,19 +256,17 @@ export function ArtPond() {
       {[[150, 216, 20], [232, 240, 26], [286, 214, 16]].map(([x, y, r], i) => (
         <ellipse key={i} cx={x} cy={y} rx={r} ry={r * 0.34} fill="none" stroke="#bfe1f2" strokeWidth="1.6" opacity=".4" />
       ))}
-      {/* жаби */}
-      {[[126, 206], [214, 246], [292, 210]].map(([x, y], i) => (
-        <g key={i}>
-          <ellipse cx={x} cy={y} rx="15" ry="9" fill={C.frog} />
-          <circle cx={x - 5} cy={y - 7} r="4" fill={C.frog} />
-          <circle cx={x + 5} cy={y - 7} r="4" fill={C.frog} />
-          <circle cx={x - 5} cy={y - 8} r="1.8" fill="#f5f0c8" />
-          <circle cx={x + 5} cy={y - 8} r="1.8" fill="#f5f0c8" />
-        </g>
-      ))}
-      {/* жаба у стрибку */}
-      <path d="M330 196 q18-34 44-8" stroke={C.moss} strokeWidth="2" fill="none" strokeDasharray="4 6" />
-      <g><ellipse cx="374" cy="192" rx="13" ry="8" fill={C.frog} /><circle cx="370" cy="186" r="3.4" fill={C.frog} /><circle cx="378" cy="186" r="3.4" fill={C.frog} /></g>
+      {/* латаття й квітка */}
+      <Sprite href={lilypad} x={262} y={232} h={22} w={52} o={.95} />
+      <Sprite href={lilywhite} x={300} y={250} h={24} w={44} />
+      <Sprite href={lilypad} x={118} y={248} h={18} w={42} o={.9} />
+      {/* жаби на березі (рендер моделі з гри) */}
+      <image href={frog1} x={2} y={158} width={96} height={54} />
+      <image href={frog2} x={312} y={138} width={86} height={50} />
+      {/* жабеня на лататті */}
+      <image href={frog2} x={240} y={202} width={46} height={27} />
+      {/* прибережна трава */}
+      <Tuft x={34} y={206} h={34} k={0} /><Tuft x={372} y={190} h={36} k={2} /><Tuft x={350} y={196} h={28} k={1} />
       {/* їжак пливе — з голками, бо без них це просто камінець */}
       <g>
         {Array.from({ length: 11 }, (_, i) => {
@@ -310,8 +360,10 @@ export function ArtNest() {
       {/* купки */}
       <g>{[[168, 206], [186, 198], [204, 206], [176, 214], [196, 212]].map(([x, y], i) =>
         <rect key={i} x={x} y={y} width="17" height="7" rx="3" fill="#c98a3c" opacity=".85" />)}</g>
-      <g>{[[240, 208], [256, 202], [268, 210], [248, 216]].map(([x, y], i) =>
-        <circle key={i} cx={x} cy={y} r="7" fill="#a3243c" />)}</g>
+      <Sprite href={apple} x={252} y={216} h={26} />
+      <Sprite href={hazelnut} x={272} y={214} h={18} />
+      <Sprite href={porcini} x={234} y={216} h={24} />
+      <Sprite href={moss} x={166} y={222} h={18} w={26} />
       {/* їжак спить */}
       <g>
         <circle cx="200" cy="196" r="26" fill={C.spine} />
@@ -411,8 +463,7 @@ export function ArtCritters() {
         <circle cx="253" cy="208" r="1.9" fill="#20160f" />
         <circle cx="259" cy="211" r="1.3" fill="#20160f" />
         <ellipse cx="249" cy="224" rx="4" ry="3" fill={C.squirrel} />
-        <circle cx="253" cy="224" r="3.2" fill="#8a5a2b" />
-        <path d="M249 222 q4 -3 8 0Z" fill="#5d3a22" />
+        <Sprite href={acorn} x={254} y={230} h={12} />
         <ellipse cx="240" cy="242" rx="8" ry="3.2" fill={C.squirrel} />
       </g>
 
@@ -437,16 +488,162 @@ export function ArtCritters() {
         ))}
       </g>
 
-      {/* пучки трави спереду */}
-      {[[44, 252], [188, 250], [352, 246]].map(([x, y], i) => (
-        <g key={i} stroke={C.leaf} strokeWidth="2.4" strokeLinecap="round">
-          <line x1={x} y1={y} x2={x - 4} y2={y - 12} />
-          <line x1={x} y1={y} x2={x} y2={y - 15} />
-          <line x1={x} y1={y} x2={x + 4} y2={y - 12} />
+      {/* пташки перелітають з крони в крону (пунктир — хвиляста траєкторія) */}
+      <path d="M70 92 q40 -30 70 -6 q40 -26 80 2 q30 -18 70 -10" stroke={C.cream} strokeWidth="1.4" fill="none" strokeDasharray="3 7" opacity=".35" />
+      {[[140, 84, 1], [222, 86, .8]].map(([x, y, sc], i) => (
+        <g key={i} transform={`translate(${x} ${y}) scale(${sc})`}>
+          <ellipse cx="0" cy="0" rx="9" ry="5.5" fill="#8a5f3e" />
+          <circle cx="8" cy="-3" r="4.4" fill="#8a5f3e" />
+          <path d="M12 -3 l5 1.5 l-5 1.2Z" fill="#3a2a1d" />
+          <path d="M-2 -2 q-6 -16 -16 -14 q4 8 10 14Z" fill="#6b4630" />
+          <path d="M-9 0 l-9 -3 l2 6Z" fill="#6b4630" />
+          <circle cx="9.5" cy="-4" r="1" fill="#1a120c" />
         </g>
       ))}
+      {/* метелик над травою */}
+      <g transform="translate(118 196) rotate(-12)">
+        <ellipse cx="-7" cy="-4" rx="8" ry="6" fill="#d24b2c" /><ellipse cx="7" cy="-4" rx="8" ry="6" fill="#d24b2c" />
+        <ellipse cx="-6" cy="5" rx="5.5" ry="4.5" fill="#b23a22" /><ellipse cx="6" cy="5" rx="5.5" ry="4.5" fill="#b23a22" />
+        <circle cx="-8" cy="-5" r="2.2" fill="#2f4fb0" /><circle cx="8" cy="-5" r="2.2" fill="#2f4fb0" />
+        <rect x="-1" y="-8" width="2" height="16" rx="1" fill="#2a241c" />
+      </g>
+      {/* мальована трава й квіти спереду */}
+      <Tuft x={40} y={262} h={36} k={0} /><Tuft x={190} y={258} h={30} k={1} /><Tuft x={360} y={256} h={34} k={2} />
+      <Sprite href={daisy} x={96} y={266} h={30} w={34} />
 
       <text x="300" y="276" textAnchor="middle" fill={C.mist} fontSize="12.5" fontFamily="Inter, sans-serif" opacity=".7">своя територія</text>
+    </svg>
+  )
+}
+
+/* ---------- нюх: пасма запаху в нічному повітрі ---------- */
+export function ArtScent() {
+  const wisp = (d: string, o: number, w: number) => (
+    <path d={d} stroke="#f2e9d6" strokeWidth={w} fill="none" strokeLinecap="round" opacity={o} filter="url(#blurW)" />
+  )
+  return (
+    <svg viewBox="0 0 400 300">
+      <WhiteDefs />
+      <defs>
+        <filter id="blurW"><feGaussianBlur stdDeviation="2.2" /></filter>
+        <radialGradient id="dusk" cx="50%" cy="100%" r="80%">
+          <stop offset="0" stopColor="#24372b" /><stop offset="1" stopColor="#0f1a16" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect x="0" y="0" width="400" height="300" fill="url(#dusk)" />
+      {/* дерева силуетами */}
+      {[[30, .9], [92, .7], [330, .85], [378, .65]].map(([x, sc], i) => (
+        <g key={i} transform={`translate(${x} 236) scale(${sc})`} opacity=".5">
+          <rect x="-5" y="-50" width="10" height="50" fill="#132019" />
+          <path d="M-34 -42 L0 -130 L34 -42Z" fill="#16281f" />
+        </g>
+      ))}
+      <path d="M0 238 Q120 222 230 236 Q320 246 400 226 L400 300 L0 300Z" fill={C.ground} />
+      {/* пасма від їжачка до запахів: сильний (гриб) — густіший, слабкий (ягоди) — ледь */}
+      {wisp('M150 212 C 190 196, 210 214, 246 190 S 300 170, 322 156', .55, 5)}
+      {wisp('M150 212 C 186 202, 206 220, 240 198 S 296 182, 318 166', .25, 9)}
+      {wisp('M140 206 C 120 186, 98 192, 80 170 S 60 140, 48 126', .28, 3.5)}
+      {wisp('M146 214 C 170 230, 210 232, 236 248', .18, 3)}
+      {/* силуети «чий запах» */}
+      <Sprite href={porcini} x={322} y={156} h={30} white o={.85} />
+      <Sprite href={strawberry} x={50} y={128} h={24} white o={.45} />
+      <Sprite href={apple} x={244} y={256} h={18} white o={.3} />
+      {/* справжній боровик у траві далі */}
+      <Sprite href={porcini} x={352} y={238} h={24} />
+      <Tuft x={340} y={242} h={26} k={1} /><Tuft x={66} y={244} h={28} k={2} />
+      {/* їжачок нюхає (морда вгору) */}
+      <g transform="translate(128 226)">
+        {Array.from({ length: 11 }, (_, i) => {
+          const x = -34 + i * 6
+          const h = 15 + Math.sin(i * 0.8) * 6
+          return <path key={i} d={`M${x} -8 L${x + 3} ${-8 - h} L${x + 6} -8Z`} fill={C.spine} />
+        })}
+        <ellipse cx="0" cy="0" rx="38" ry="20" fill={C.spine} />
+        <ellipse cx="31" cy="-6" rx="15" ry="12" fill={C.hog} transform="rotate(-18 31 -6)" />
+        <circle cx="44" cy="-12" r="3.2" fill="#20160f" />
+        <circle cx="34" cy="-12" r="2.2" fill="#20160f" />
+      </g>
+      <text x="200" y="40" textAnchor="middle" fill={C.mist} fontSize="13" fontFamily="Inter, sans-serif" opacity=".75">ближче — густіше пасмо</text>
+    </svg>
+  )
+}
+
+/* ---------- захід сонця: промені крізь ліс, місяць зі сходу ---------- */
+export function ArtSunset() {
+  return (
+    <svg viewBox="0 0 400 300">
+      <defs>
+        <linearGradient id="skyS" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#24304e" /><stop offset=".55" stopColor="#7a4f62" /><stop offset=".85" stopColor="#e3895a" /><stop offset="1" stopColor="#f4b26b" />
+        </linearGradient>
+        <radialGradient id="sunG" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stopColor="#fff2c9" /><stop offset=".25" stopColor="#ffc779" stopOpacity=".9" /><stop offset="1" stopColor="#ff9a4d" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="ray" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#ffd59a" stopOpacity=".55" /><stop offset="1" stopColor="#ffd59a" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="400" height="300" fill="url(#skyS)" />
+      {/* місяць зі сходу — блідий */}
+      <circle cx="236" cy="54" r="16" fill="#f7f0dd" opacity=".55" />
+      <circle cx="236" cy="54" r="28" fill="#f7f0dd" opacity=".08" />
+      {/* сонце наполовину за обрієм */}
+      <circle cx="96" cy="206" r="90" fill="url(#sunG)" />
+      <circle cx="96" cy="206" r="20" fill="#fff0c4" />
+      {/* дальній ліс */}
+      <path d="M0 210 L20 186 L36 204 L56 176 L78 206 L104 182 L128 206 L150 178 L176 206 L200 186 L224 208 L250 180 L276 206 L300 184 L326 208 L350 182 L376 206 L400 188 L400 300 L0 300Z" fill="#3a2c3a" opacity=".85" />
+      {/* промені крізь ліс */}
+      {[[-4, 22], [6, 14], [14, 30], [24, 12]].map(([a, w], i) => (
+        <path key={i} d={`M96 206 L400 ${150 + a * 4} L400 ${150 + a * 4 + w} Z`} fill="url(#ray)" opacity={.5 - i * .08} />
+      ))}
+      {/* ближні дерева силуетами: дуб праворуч, ялинка ліворуч */}
+      <g fill="#1c1820">
+        <path d="M322 270 L328 160 Q330 140 318 120 L326 118 Q336 136 340 150 Q348 128 364 116 L368 122 Q350 140 346 170 L352 270Z" />
+        {[[300, 104, 30], [336, 84, 36], [376, 100, 34], [356, 128, 26], [318, 128, 22], [398, 128, 24]].map(([x, y, r], i) =>
+          <circle key={i} cx={x} cy={y} r={r} />)}
+        <path d="M22 270 L28 270 L28 250 L60 250 L36 214 L54 214 L30 176 L44 176 L24 126 L4 176 L18 176 L-6 214 L12 214 L-12 250 L22 250Z" />
+      </g>
+      <path d="M0 252 Q110 236 210 248 Q300 258 400 240 L400 300 L0 300Z" fill="#1f2a20" />
+      {/* трава в контровому світлі */}
+      {[[30, 0], [70, 2], [118, 1], [160, 0], [214, 2], [262, 1], [306, 0], [352, 2]].map(([x, k], i) => (
+        <Tuft key={i} x={x} y={262 + (i % 2) * 6} h={30 + (i % 3) * 6} k={k} />
+      ))}
+      {/* їжачок дивиться на захід */}
+      <g transform="translate(250 262)">
+        {Array.from({ length: 10 }, (_, i) => {
+          const x = -30 + i * 6
+          const h = 13 + Math.sin(i * 0.8) * 5
+          return <path key={i} d={`M${x} -7 L${x + 3} ${-7 - h} L${x + 6} -7Z`} fill="#2b2119" />
+        })}
+        <ellipse cx="0" cy="0" rx="33" ry="17" fill="#2b2119" />
+        <path d="M-28 -12 Q0 -24 30 -10" stroke="#ffcf8f" strokeWidth="2" fill="none" opacity=".7" />
+        <ellipse cx="-28" cy="-2" rx="13" ry="10" fill="#3a2c22" />
+      </g>
+    </svg>
+  )
+}
+
+/* ---------- ліс, що росте як справжній: рендер сцени з гри ---------- */
+export function ArtForest() {
+  return (
+    <svg viewBox="0 0 400 300">
+      <defs>
+        <clipPath id="forestClip"><rect x="0" y="0" width="400" height="300" rx="22" /></clipPath>
+        <linearGradient id="forestFade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset=".6" stopColor="#0f1a16" stopOpacity="0" /><stop offset="1" stopColor="#0f1a16" stopOpacity=".55" />
+        </linearGradient>
+      </defs>
+      <g clipPath="url(#forestClip)">
+        <image href={forest} x="0" y="0" width="400" height="300" preserveAspectRatio="xMidYMid slice" />
+        <rect x="0" y="0" width="400" height="300" fill="url(#forestFade)" />
+      </g>
+      {/* те, що лежить під деревами */}
+      <Sprite href={oakleaf} x={60} y={292} h={26} rot={-20} />
+      <Sprite href={acorn} x={92} y={290} h={18} />
+      <Sprite href={chanterelle} x={330} y={292} h={30} />
+      <Sprite href={blackberry} x={128} y={292} h={22} />
+      <Sprite href={rosehip} x={296} y={292} h={20} />
+      <Sprite href={fern} x={372} y={294} h={40} />
     </svg>
   )
 }

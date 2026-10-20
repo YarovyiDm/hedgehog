@@ -8,7 +8,7 @@ import {
 import { Ambient } from './components/Ambient'
 import { Reveal } from './components/Reveal'
 import {
-  ArtCritters, ArtFox, ArtNest, ArtNight, ArtPond, ArtRoll, ArtSkills, ArtSpines, ArtWeather, ArtYear, Moon, Ridge,
+  ArtCritters, ArtForest, ArtFox, ArtNest, ArtPond, ArtRoll, ArtScent, ArtSkills, ArtSpines, ArtSunset, ArtWeather, ArtYear, Moon, Ridge,
 } from './components/Art'
 import { Docs } from './Docs'
 import { ScrollTop } from './components/ScrollTop'
@@ -73,7 +73,7 @@ const chapters: Ch[] = [
       { icon: <Wind size={19} />, t: 'Вітер має значення', d: 'З навітряного боку запах чути майже вдвічі далі' },
       { icon: <Eye size={19} />, t: 'І небезпека теж пахне', d: 'Червонувате пасмо — десь поруч лисиця' },
     ],
-    art: <ArtSkills />,
+    art: <ArtScent />,
   },
   {
     n: '03',
@@ -94,7 +94,7 @@ const chapters: Ch[] = [
       { icon: <Sun size={19} />, t: 'Промені крізь ліс', d: 'Низьке тепле світло й довгі тіні на початку кожної ночі' },
       { icon: <MoonIcon size={19} />, t: 'Місячна ніч', d: 'Відблиск місяця на воді, мерехтливі зорі' },
     ],
-    art: <ArtNight />,
+    art: <ArtSunset />,
   },
   {
     n: '04',
@@ -117,7 +117,7 @@ const chapters: Ch[] = [
       { icon: <Trees size={19} />, t: 'Шість порід дерев', d: 'Дуб, сосна, ялина, береза, вільха й дика яблуня — кожна зі своєю корою' },
       { icon: <Leaf size={19} />, t: 'Їжа там, де їй місце', d: 'Горіхи під ліщиною, лисички в моху під ялинами, ожина на узліссі' },
     ],
-    art: <ArtYear />,
+    art: <ArtForest />,
   },
   {
     n: '05',
